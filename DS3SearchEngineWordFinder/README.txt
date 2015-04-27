@@ -9,3 +9,26 @@ Packaging: Apache ANT 1.6 or latest
   ant release
   
 . Go to dist folder, see bat file for configuration  
+
+
+# Setup for testing
+## Server(s)
+Server database (All servers point to this folder): 
+  C:\tmp\input
+  C:\tmp\backup
+  
+See: start-server.bat
+
+REM ================ USER EDITING AREA =================
+set RMI_PORT=1099
+set INPUT_DIR="C:\tmp\input"
+set BACKUP_DIR="C:\tmp\backup"
+REM ================ END USER EDITING AREA =============  
+  
+## Client(s) 
+
+See: client.bat
+REM ================ USER EDITING AREA =================
+set RMI_HOST=127.0.0.1;172.16.15.40
+set RMI_PORT=1099
+REM ================ END USER EDITING AREA =================
