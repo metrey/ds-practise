@@ -5,11 +5,15 @@ Contact: metreysk@gmail.com / http://osify.com
 Requires at least JDK 1.6
 Packaging: Apache ANT 1.6 or latest
 
+# Build
 . To compile / packaging use: Apache ANT 1.6 up
   ant release
   
 . Go to dist folder, see bat file for configuration  
 
+Ant Build:
+
+  ant all
 
 # Setup for testing
 ## Server(s)
