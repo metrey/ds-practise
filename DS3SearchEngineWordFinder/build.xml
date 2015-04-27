@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<project name="DS3SearchEngineWordFinder" default="all" basedir=".">
+
+	<target name="init">
+		<property file="ant.properties"/>
+		<property file=".ant.properties"/>
+		<!-- create a property containing all .jar files, prefix lib/, and seperated with a space -->
+		<pathconvert property="libs.project" pathsep=" ">
+		    <mapper>
+		      <chainedmapper>
+		 
+		        <!-- remove absolute path -->
+		        <flattenmapper />
+		 
+		        <!-- add lib/ prefix -->
+		        <globmapper from="*" to="./*" />
+		      </chainedmapper>
+		    </mapper>
+		 
+		    <path>
+		 
+		      <!-- lib.home contains all jar files, in several subdirectories -->
+		      <fileset dir="${base.dir}/lib">
+		        <include name="**/*.jar" />
+		      </fileset>
+		    </path>
+		</pathconvert>
+		 <tstamp prefix="today">
+		     <format property="year" pattern="yyyy"/>
+		     <format property="month" pattern="MM"/>
+		     <format property="date" pattern="dd"/>
+		 </tstamp>
+		 <echoproperties prefix="today"/>
+	</target>
+
+	<!-- Main target  -->
+	<target name="all" depends="init,build,buildJar"/>
+	
+	<!-- clean all -->
+	<target name="clean" depends="init">
+		<delete dir="${tmp.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+
+	<!-- Compile Java Files and store in /tmp/src/classes directory  -->
+	<target name="build" depends="init" >
+		  <mkdir dir="${tmp.src.classes.dir}"/>
+      	  <javac includeantruntime="false" srcdir="${src.java.dir}" destdir="${tmp.src.classes.dir}" debug="true" >
+      	  	<classpath>
+				<fileset dir="${base.dir}/lib">
+				    <include name="*.jar"/>
+				</fileset>
+			</classpath>
+      	  </javac>		
+      </target>
+	
+	<!-- Create the War File -->
+	<target name="buildJar" depends="build, buildJarClient, buildJarServer" >
+		<mkdir dir="${tmp.dist.applications.dir}/lib"/>
+		<move todir="${tmp.dist.applications.dir}/lib">
+			<fileset dir="${tmp.dist.applications.dir}" >
+				<include name="${client.project.name}.jar"/>
+				<include name="${server.project.name}.jar"/>
+			</fileset>
+		</move>
+		<copy todir="${tmp.dist.applications.dir}/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="buildJarClient" depends="init">
+			<!-- getting all *.class -->
+			<mkdir dir="${tmp.dist.jar.client.dir}"/>
+			
+		    <copy todir="${tmp.dist.jar.client.dir}">
+			      <fileset dir="${tmp.src.classes.dir}" >
+			      	<include name="**/*" />
+			      	<exclude name="edu/rupp/search/words/server/*" />
+			      </fileset>
+		    </copy>
+			
+			<!-- getting lib file 
+			<mkdir dir="${tmp.dist.jar.client.dir}/lib"/>
+			<copy todir="${tmp.dist.jar.client.dir}/lib">
+				<fileset dir="${lib.dir}">
+						<include name="*.jar"/> 	
+				</fileset>
+			</copy>
+	        
+		 	-->
+			<jar jarfile="${tmp.dist.applications.dir}/${client.project.name}.jar" basedir="${tmp.dist.jar.client.dir}" >
+				<!-- define MANIFEST.MF -->
+			    <manifest>
+			      <attribute name="Built-By" value="${user.name.var}" />
+			      <attribute name="Built-Date" value="${today}"/>
+			      <attribute name="Main-Class" value="${client.main.class}" />
+			      <section name="common">
+			        <attribute name="Specification-Title" value="${component.name}" />
+			        <attribute name="Specification-Version" value="${component.version}" />
+			        <attribute name="Specification-Vendor" value="${component.vendor}" />
+			        <attribute name="Implementation-Title" value="${component.name}" />
+			        <attribute name="Implementation-Version" value="${component.version} ${today}" />
+			        <attribute name="Implementation-Vendor" value="${component.vendor}" />
+			      </section>
+			 
+			      <!-- finally, use the magically generated libs path -->
+			      <attribute name="Class-Path" value="lib lib/ ${libs.project}" />
+			    </manifest>
+			</jar>
+
+	</target>
+	<target name="buildJarServer" depends="init">
+		<!-- getting all *.class -->
+		<mkdir dir="${tmp.dist.jar.server.dir}"/>
+				
+		<copy todir="${tmp.dist.jar.server.dir}">
+		   	<fileset dir="${tmp.src.classes.dir}" >
+		   	   	<include name="**/*" />
+		   	   	<exclude name="edu/rupp/search/words/client/*" />
+		   	</fileset> 
+		</copy>
+				
+		<!-- getting lib file 
+		<mkdir dir="${tmp.dist.jar.server.dir}/lib"/>
+		<copy todir="${tmp.dist.jar.server.dir}/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		-->
+				
+		<jar jarfile="${tmp.dist.applications.dir}/${server.project.name}.jar" basedir="${tmp.dist.jar.server.dir}" >
+			<!-- define MANIFEST.MF -->
+			    <manifest>
+			      <attribute name="Built-By" value="${user.name.var}" />
+			      <attribute name="Built-Date" value="${today}"/>
+			      <attribute name="Main-Class" value="${server.main.class}" />
+			      <section name="common">
+			        <attribute name="Specification-Title" value="${component.name}" />
+			        <attribute name="Specification-Version" value="${component.version}" />
+			        <attribute name="Specification-Vendor" value="${component.vendor}" />
+			        <attribute name="Implementation-Title" value="${component.name}" />
+			        <attribute name="Implementation-Version" value="${component.version} ${today}" />
+			        <attribute name="Implementation-Vendor" value="${component.vendor}" />
+			      </section>
+			 
+			      <!-- finally, use the magically generated libs path -->
+			      <attribute name="Class-Path" value="lib lib/ ${libs.project}" />
+			    </manifest>
+		</jar>
+
+	</target>
+	
+	
+	<!-- Full Release with this task -->
+	<target name="release" depends="clean, buildJar" >
+		<mkdir dir="${dist.dir}"/>
+		<copy todir="${dist.dir}">
+			<fileset dir="${tmp.dist.applications.dir}" includes="**/*" />
+			<fileset dir="${batch.script.dir}" includes="**/*" />
+		</copy>
+	</target>
+</project>
+

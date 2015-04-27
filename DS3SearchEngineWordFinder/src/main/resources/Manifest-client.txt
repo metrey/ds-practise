@@ -1,0 +1,6 @@
+Main-Class: edu.rupp.search.words.client.MainTester
+Class-Path: . ./lib ./sqlite-jdbc-3.7.2.jar ./xercesImpl-2.6.2.jar
+Specification-Vendor: Osify.com, Pongsametrey SOK, MITE 2011, metreysk@gmail.com
+Implementation-Title: edu.rupp.search
+Implementation-Version: build-1
+Implementation-Vendor: Osify.com

@@ -1,0 +1,6 @@
+Main-Class: edu.rupp.rmi.students.server.StudentCoursesServer
+Class-Path: . ./lib ./sqlite-jdbc-3.7.2.jar
+Specification-Vendor: Osify.com, Pongsametrey SOK, MITE 2011, metreysk@gmail.com
+Implementation-Title: edu.rupp.rmi
+Implementation-Version: build1
+Implementation-Vendor: Osify.com

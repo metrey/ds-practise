@@ -1,0 +1,2 @@
+Main-Class: edu.rupp.filesystem.client.FTPFileClient
+Class-Path: .
