@@ -21,7 +21,9 @@ Ant Build:
 
 # Setup for testing
 ## Server(s)
+
 Server database (All servers point to this folder): 
+
   C:\tmp\input
   C:\tmp\backup
   
